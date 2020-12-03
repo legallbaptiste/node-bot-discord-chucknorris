@@ -5,6 +5,7 @@ Le but : prendre en main l'utilisation d'API.
 <br>
 Techno utilisé : NodeJS + Docker
 <br>
+Vous devez créer un fichier .env à la racine contenant cette variable : API_KEY = ...
 Pour lancer l'app il suffit d'installer les packages et lancer le serveur : 
 <br>
 npm i
