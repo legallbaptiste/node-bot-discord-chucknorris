@@ -5,13 +5,16 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const axios = require('axios');
+const fs = require('fs')
+const envfile = require('envfile')
+
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
 
-const prefix = '%';
+let prefix = '%';
 client.on('message', message => {
     // si c'est un bot qui parle on passe
     if (message.author.bot) return;
@@ -32,7 +35,6 @@ client.on('message', message => {
         console.log(numArgs);
         // s'il y en a pas alors on met une blague random
         if(numArgs.length == 0) {
-            console.log("random")
             axios.get('http://api.icndb.com/jokes/random')
                 .then(function (response) {
                     // handle success
@@ -44,11 +46,9 @@ client.on('message', message => {
                 })
             // si l'argument est un nombre alors on renvoie l'id associé à la blague
         } else if(numArgs.length > 0 && typeof parseInt(args[0]) === 'number'){
-            console.log("joke id")
             axios.get('http://api.icndb.com/jokes/'+parseInt(args[0])+'')
                 .then(function (response) {
                     // handle success
-
                     message.reply(" Blague n°"+args[0]+", "+response.data.value.joke);
                 })
                 .catch(function (error) {
@@ -57,7 +57,6 @@ client.on('message', message => {
                 })
             // si le premier argument est un string alors on renvoie la blague avec la catégorie associé
         } else if(numArgs.length > 0 && typeof args[0] === "string") {
-            console.log("blague categorie")
             axios.get('http://api.icndb.com/jokes/random?limitTo="' + args + '"')
                 .then(function (response) {
                     // handle success
@@ -70,11 +69,10 @@ client.on('message', message => {
                 })
         }
      // on compte le nombre de blague
-    }else if (command === "count") {
+    }else if (command === "jokeCount") {
         axios.get('http://api.icndb.com/jokes/count')
             .then(function (response) {
                 // handle success
-                console.log(response);
                 message.reply("Chuck Norris à "+ response.data.value +" blagues dans sa poche");
             })
             .catch(function (error) {
@@ -86,13 +84,18 @@ client.on('message', message => {
         axios.get('http://api.icndb.com/categories')
             .then(function (response) {
                 // handle success
-                console.log(response);
                 message.reply("Chuck Norris à "+ response.data.value.toString() +" comme catégorie de blague");
             })
             .catch(function (error) {
                 // handle error
                 console.log(error);
             })
+    } else if (command === "prefix") {
+        if(args.length > 1) {
+            return;
+        }
+        prefix = args[0];
+        message.reply("Chuck Norris adore ton nouveau préfixe : "+ prefix);
     }
 });
 
