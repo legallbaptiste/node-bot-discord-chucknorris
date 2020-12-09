@@ -5,8 +5,7 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const axios = require('axios');
-const fs = require('fs')
-const envfile = require('envfile')
+
 
 
 client.on('ready', () => {
@@ -26,6 +25,7 @@ client.on('message', message => {
     const args = commandBody.split(' ');
     // on récupère la commande
     const command = args.shift().toLowerCase();
+    console.log(command);
     if (command === "ping") {
         const timeTaken = Date.now() - message.createdTimestamp;
         message.reply(`Pong! La latence est de ${timeTaken}ms.`);
@@ -45,7 +45,7 @@ client.on('message', message => {
                     console.log(error);
                 })
             // si l'argument est un nombre alors on renvoie l'id associé à la blague
-        } else if(numArgs.length > 0 && typeof parseInt(args[0]) === 'number'){
+        } else if(numArgs.length > 0 && !isNaN(args[0])){
             axios.get('http://api.icndb.com/jokes/'+parseInt(args[0])+'')
                 .then(function (response) {
                     // handle success
@@ -56,7 +56,7 @@ client.on('message', message => {
                     console.log(error);c
                 })
             // si le premier argument est un string alors on renvoie la blague avec la catégorie associé
-        } else if(numArgs.length > 0 && typeof args[0] === "string") {
+        } else if(numArgs.length > 0 && isNaN(args[0])) {
             axios.get('http://api.icndb.com/jokes/random?limitTo="' + args + '"')
                 .then(function (response) {
                     // handle success
@@ -69,7 +69,7 @@ client.on('message', message => {
                 })
         }
      // on compte le nombre de blague
-    }else if (command === "jokeCount") {
+    }else if (command === "jokecount") {
         axios.get('http://api.icndb.com/jokes/count')
             .then(function (response) {
                 // handle success
@@ -80,7 +80,7 @@ client.on('message', message => {
                 console.log(error);
             })
         // on récupère les catégories
-    } else if (command === "categorie") {
+    } else if (command === "jokecategories") {
         axios.get('http://api.icndb.com/categories')
             .then(function (response) {
                 // handle success
