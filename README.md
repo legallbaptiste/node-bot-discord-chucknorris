@@ -20,3 +20,7 @@ Vous pouvez lancer également via Docker en utilisant cette commande à la racin
 docker build -t <your username>/node-bot-discord-chucknorris .
 <br>
 docker run -p 49160:8080 -d <your username>/node-bot-discord-chucknorris
+ <br> 
+ En cas de problème avec le serveur vous pouvez aller directement sur la console du docker : 
+  docker exec -it NAMEDOCKER /bin/bash
+ 
